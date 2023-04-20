@@ -1,0 +1,17 @@
+get user client
+get user self id
+
+get bot object
+get channels ids
+______________________________________
+
+get last 20 messages from each channel
+find words matches in list of messages
+
+or
+
+watch channels for new message
+find words matches in new message
+______________________________________
+
+send matches as bot message
