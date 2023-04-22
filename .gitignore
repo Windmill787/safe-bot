@@ -1,4 +1,13 @@
+# development environments
 .idea/
+.vscode
+
+# telegram session
 *.session
 *.session-journal
+
+# environment variables
 .env
+
+# cache
+__pycache__
