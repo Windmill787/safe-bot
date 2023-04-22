@@ -6,5 +6,6 @@ RUN python3 -m pip install python-telegram-bot
 WORKDIR /app
 
 COPY main.py ./
+COPY session_name.session ./
 
-CMD [ "python3", "./main.py"]
+CMD [ "python3", "./main.py", "", ""]
