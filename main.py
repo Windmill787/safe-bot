@@ -11,7 +11,7 @@ client.start()
 bot = Bot(token=os.getenv('BOT_KEY'))
 
 my_id = client.get_me().id
-channel_matches = json.loads(os.environ['CHANNELS'])
+channel_matches = json.loads(os.environ['BOT_CHANNELS'])
 
 channel_ids = []
 for dialog in client.get_dialogs():
@@ -22,7 +22,7 @@ for dialog in client.get_dialogs():
 
 @client.on(events.NewMessage(chats=channel_ids))
 async def send_message(event):
-    message_matches = json.loads(os.environ['MESSAGES'])
+    message_matches = json.loads(os.environ['BOT_MESSAGES'])
     for message_match in message_matches:
         if re.search(message_match, event.message.message, re.IGNORECASE):
             text = event.message.message
@@ -32,5 +32,5 @@ async def send_message(event):
             await bot.send_message(chat_id=my_id, text=text)
 
 if __name__ == '__main__':
+    print('(Press Ctrl+C to stop script)')
     client.run_until_disconnected()
-    print('Client is running')
