@@ -38,14 +38,18 @@ async def send_message(event):
         for message_match in message_matches:
             if re.search(message_match, reply_to_message.message, re.IGNORECASE):
                 reply_matches = True
-        for message_match in message_matches:
-            if re.search(message_match, event.message.message, re.IGNORECASE) and reply_matches:
-                result_text = f'Reply to: "{reply_to_message.message}" <b>{event.message.message}</b>'
+                break
+        if not event.message.message.endswith('?'):
+            for message_match in message_matches:
+                if re.search(message_match, event.message.message, re.IGNORECASE) or reply_matches:
+                    result_text = f'Reply to: "{reply_to_message.message}" <b>{event.message.message}</b>'
+                    break
     else:
         if not event.message.message.endswith('?'):
             for message_match in message_matches:
                 if re.search(message_match, event.message.message, re.IGNORECASE):
                     result_text = event.message.message.replace(message_match, f'<b>{message_match}</b>')
+                    break
 
     if result_text:
         await bot.send_message(chat_id=my_id, text=result_text, parse_mode='html')
