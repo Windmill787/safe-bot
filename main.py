@@ -20,10 +20,16 @@ channel_ids = []
 for dialog in client.get_dialogs():
     for match in channel_matches:
         if re.search(match, dialog.name, re.IGNORECASE):
-            channel_ids.append(dialog.message.peer_id.channel_id)
+            if hasattr(dialog.message.peer_id, 'channel_id'):
+                channel_ids.append(dialog.message.peer_id.channel_id)
+            elif hasattr(dialog.message.peer_id, 'chat_id'):
+                channel_ids.append(dialog.message.peer_id.chat_id)
+            else:
+                print('No chat_id or channel_id attribute')
+                print(dialog)
+                exit()
 
-# channel_ids.append(my_id)
-
+channel_ids.append(my_id)
 
 @client.on(events.NewMessage(chats=channel_ids))
 async def send_message(event):
