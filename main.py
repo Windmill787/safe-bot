@@ -54,7 +54,7 @@ async def send_message(event):
         if not event.message.message.endswith('?'):
             for message_match in message_matches:
                 if re.search(message_match, event.message.message, re.IGNORECASE):
-                    result_text = event.message.message.replace(message_match, f'<b>{message_match}</b>')
+                    result_text = re.sub(message_match, f'<b>{message_match}</b>', event.message.message, flags=re.IGNORECASE)
                     break
 
     if result_text:
