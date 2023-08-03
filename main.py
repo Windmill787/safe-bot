@@ -3,6 +3,8 @@ import os
 from telegram import Update, Bot
 import re
 import sys
+from datetime import datetime
+import pytz
 
 client = TelegramClient('session_name', os.getenv('API_ID'), os.getenv('API_HASH'))
 client.start()
@@ -29,12 +31,13 @@ for dialog in client.get_dialogs():
                 print(dialog)
                 exit()
 
-channel_ids.append(my_id)
+# channel_ids.append(my_id)
+
 
 @client.on(events.NewMessage(chats=channel_ids))
 async def send_message(event):
     result_text = ''
-    # print(event.message.message)
+    #print(event.message.message)
     reply_to_message = None
     if event.message.reply_to is not None:
         reply_to_message = await client.get_messages(event.message.peer_id, ids=event.message.reply_to.reply_to_msg_id)
@@ -48,17 +51,25 @@ async def send_message(event):
         if not event.message.message.endswith('?'):
             for message_match in message_matches:
                 if re.search(message_match, event.message.message, re.IGNORECASE) or reply_matches:
-                    result_text = f'Reply to: "{reply_to_message.message}" <b>{event.message.message}</b>'
+                    message = re.sub(message_match, f'<b>{message_match}</b>', event.message.message,
+                                     flags=re.IGNORECASE)
+                    result_text = f'Reply to "{reply_to_message.message}": {message}'
                     break
     else:
         if not event.message.message.endswith('?'):
             for message_match in message_matches:
                 if re.search(message_match, event.message.message, re.IGNORECASE):
-                    result_text = re.sub(message_match, f'<b>{message_match}</b>', event.message.message, flags=re.IGNORECASE)
+                    result_text = re.sub(message_match, f'<b>{message_match}</b>', event.message.message,
+                                         flags=re.IGNORECASE)
                     break
 
     if result_text:
         await bot.send_message(chat_id=my_id, text=result_text, parse_mode='html')
 if __name__ == '__main__':
+    tz = pytz.timezone("Europe/Kiev")
+    time = datetime.now(tz)
+    currentTime = time.strftime("%H:%M:%S")
+    print('Started at:', currentTime)
     print('(Press Ctrl+C to stop script)')
     client.run_until_disconnected()
+
